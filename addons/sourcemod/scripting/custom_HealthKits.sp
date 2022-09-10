@@ -23,13 +23,10 @@ public Plugin myinfo =
 // - Global Variables - //
 //////////////////////////
 
-int MedKitChance = 70;
-
-int MedKitHealthMinimum = 25;
-int MedKitHealthMaximum = 50;
-
-int MedKitHealthCap = 100;
-
+ConVar Cvar_DropChance;
+ConVar Cvar_HealthMinimum;
+ConVar Cvar_HealthMaximum;
+ConVar Cvar_HealthCap;
 
 
 //////////////////////////
@@ -42,6 +39,13 @@ public void OnPluginStart()
 {
 	// Hooks the events which we intend to use
 	HookEvent("player_death", Event_PlayerDeath, EventHookMode_Post);
+
+	// Creates the convars which we intend for the server owner to be able to configure
+	Cvar_DropChance = 					CreateConVar("HealthKit_DropChance", 		"100", 		"What is the chance in percentages for a dead player to drop a health kit? - [Default = 100]");
+	Cvar_HealthMinimum = 				CreateConVar("HealthKit_HealthMinimum", 	"25", 		"How much health should the player as a minimum receive from picking up a health kit? - [Default = 25]");
+	Cvar_HealthMaximum = 				CreateConVar("HealthKit_HealthMaximum", 	"50", 		"How much health should the player as a maximum receive from picking up a health kit? - [Default = 50]");
+	Cvar_HealthCap = 					CreateConVar("HealthKit_Weapon_Shield", 	"100", 		"How much health should the player have before being unable to pick up a health kit? - [Default = 100]");
+
 
 	// Adds files to the download list, and precaches them
 	DownloadAndPrecacheFiles();
@@ -83,20 +87,25 @@ public void Hook_OnStartTouch(int entity, int other)
 	// Obtains the player's health and store it within the PlayerHealth variable
 	int PlayerHealth = GetClientHealth(other);
 
-	// Picks a random number between 25 to 50
-	int RandomHealth = GetRandomInt(MedKitHealthMinimum, MedKitHealthMaximum);
+	// Obtains the convar's value and store it within our variable
+	int HealthMinimum = GetConVarInt(Cvar_HealthMinimum);
+	int HealthMaximum = GetConVarInt(Cvar_HealthMaximum);
+	int HealthCap = GetConVarInt(Cvar_HealthCap);
 
-	// If the player's health is below MedKitHealthCap then execute this section
-	if(PlayerHealth < MedKitHealthCap)
+	// Picks a random number between 25 to 50 (Default)
+	int RandomHealth = GetRandomInt(HealthMinimum, HealthMaximum);
+
+	// If the player's health is below HealthCap then execute this section
+	if(PlayerHealth < HealthCap)
 	{
-		// If the player's health plus RandomHealth is higher than MedKitHealthCap then execute this section
-		if(PlayerHealth + RandomHealth > MedKitHealthCap)
+		// If the player's health plus RandomHealth is higher than HealthCap then execute this section
+		if(PlayerHealth + RandomHealth > HealthCap)
 		{
-			// Changes the clients health to MedKitHealthCap
-			SetEntityHealth(other, MedKitHealthCap);
+			// Changes the clients health to HealthCap
+			SetEntityHealth(other, HealthCap);
 		}
 
-		// If the player's health plus RandomHealth is higher than MedKitHealthCap then execute this section
+		// If the player's health plus RandomHealth is higher than HealthCap then execute this section
 		else
 		{
 			// Changes the client's health to the player's current health plus the RandomHealth value
@@ -152,8 +161,11 @@ public Action Event_PlayerDeath(Handle event, const char[] name, bool dontBroadc
 		return Plugin_Continue;
 	}
 
+	// Obtains the convar's value and store it within our variable
+	int DropChance = GetConVarInt(Cvar_DropChance);
+
 	// If the MedKitChance is larger than chosen random number then execute this section
-	if(GetRandomInt(0, 100) < MedKitChance)
+	if(GetRandomInt(0, 100) <= DropChance)
 	{
 		// Spawns a medic kit on the ground
 		SpawnHealthKit(client);
