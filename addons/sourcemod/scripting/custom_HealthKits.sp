@@ -41,10 +41,10 @@ public void OnPluginStart()
 	HookEvent("player_death", Event_PlayerDeath, EventHookMode_Post);
 
 	// Creates the convars which we intend for the server owner to be able to configure
-	Cvar_DropChance = 					CreateConVar("HealthKit_DropChance", 		"100", 		"What is the chance in percentages for a dead player to drop a health kit? - [Default = 100]");
-	Cvar_HealthMinimum = 				CreateConVar("HealthKit_HealthMinimum", 	"25", 		"How much health should the player as a minimum receive from picking up a health kit? - [Default = 25]");
-	Cvar_HealthMaximum = 				CreateConVar("HealthKit_HealthMaximum", 	"50", 		"How much health should the player as a maximum receive from picking up a health kit? - [Default = 50]");
-	Cvar_HealthCap = 					CreateConVar("HealthKit_Weapon_Shield", 	"100", 		"How much health should the player have before being unable to pick up a health kit? - [Default = 100]");
+	Cvar_DropChance = 		CreateConVar("HealthKit_DropChance", 	"100", 	"What is the chance in percentages for a dead player to drop a health kit? - [Default = 100]");
+	Cvar_HealthMinimum = 	CreateConVar("HealthKit_HealthMinimum", "25", 	"How much health should the player as a minimum receive from picking up a health kit? - [Default = 25]");
+	Cvar_HealthMaximum = 	CreateConVar("HealthKit_HealthMaximum", "50", 	"How much health should the player as a maximum receive from picking up a health kit? - [Default = 50]");
+	Cvar_HealthCap = 		CreateConVar("HealthKit_Weapon_Shield", "100",	"How much health should the player have before being unable to pick up a health kit? - [Default = 100]");
 
 	// Automatically generates a config file that contains our plugins configurable variables
 	AutoExecConfig(true, "Manifest_HealthKits");
