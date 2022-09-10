@@ -46,6 +46,8 @@ public void OnPluginStart()
 	Cvar_HealthMaximum = 				CreateConVar("HealthKit_HealthMaximum", 	"50", 		"How much health should the player as a maximum receive from picking up a health kit? - [Default = 50]");
 	Cvar_HealthCap = 					CreateConVar("HealthKit_Weapon_Shield", 	"100", 		"How much health should the player have before being unable to pick up a health kit? - [Default = 100]");
 
+	// Automatically generates a config file that contains our plugins configurable variables
+	AutoExecConfig(true, "Manifest_HealthKits");
 
 	// Adds files to the download list, and precaches them
 	DownloadAndPrecacheFiles();
